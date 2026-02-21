@@ -87,8 +87,9 @@ async def cmd_start(update: Update, _: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
 
     await update.message.reply_text(
-        f"당신의 chat_id는: `{chat_id}`",
-        parse_mode="Markdown",
+        f"✅ 알림 등록 완료!\n\n"
+        f"당신의 chat_id: {chat_id}\n\n"
+        f"Railway 배포 시 이 값을 CHAT_ID 환경변수에 입력하세요.",
     )
 
 
