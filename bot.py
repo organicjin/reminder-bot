@@ -86,25 +86,10 @@ async def job_weekly_review():
 async def cmd_start(update: Update, _: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
 
-    if CHAT_ID and str(chat_id) == CHAT_ID:
-        await update.message.reply_text(
-            "✅ 알림이 활성화되어 있어요!\n\n"
-            "⏰ 스케줄 (한국 시간 KST):\n"
-            "• 매일 09:30 — 🗣 영어 회화\n"
-            "• 매일 19:00 — 💚 건강 기록\n"
-            "• 매일 22:00 — 📚 독서\n"
-            "• 일요일 19:00 — 📝 주간 리뷰"
-        )
-    else:
-        await update.message.reply_text(
-            f"👋 안녕하세요!\n\n"
-            f"당신의 chat_id는: `{chat_id}`\n\n"
-            f"이 값을 환경변수에 설정해주세요:\n"
-            f"`CHAT_ID={chat_id}`\n\n"
-            f"Railway: Variables 탭에서 추가\n"
-            f"로컬: .env 파일에 추가",
-            parse_mode="Markdown",
-        )
+    await update.message.reply_text(
+        f"당신의 chat_id는: `{chat_id}`",
+        parse_mode="Markdown",
+    )
 
 
 async def cmd_status(update: Update, _: ContextTypes.DEFAULT_TYPE):
