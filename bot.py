@@ -42,12 +42,6 @@ DAILY_READING = (
     "Claude 독서 파트너가 기다리고 있어요 🕯"
 )
 
-WEEKLY_REVIEW = (
-    "📝 주간 리뷰 시간이에요!\n"
-    "이번 한 주 어땠어요? 잘한 것, 아쉬운 것, 다음 주 다짐까지.\n"
-    "Claude 주간 리뷰 프로젝트에서 이번 주를 함께 돌아봐요 🌙"
-)
-
 # ───────────────────────────── 스케줄 전송 ─────────────────────────────
 
 _app: Optional[Application] = None
@@ -77,10 +71,6 @@ async def job_reading():
     await _send_message(DAILY_READING)
 
 
-async def job_weekly_review():
-    await _send_message(WEEKLY_REVIEW)
-
-
 # ───────────────────────────── 핸들러 ─────────────────────────────
 
 async def cmd_start(update: Update, _: ContextTypes.DEFAULT_TYPE):
@@ -102,8 +92,7 @@ async def cmd_status(update: Update, _: ContextTypes.DEFAULT_TYPE):
             "• 평일 07:30 — 📚 독서\n"
             "• 평일 07:50 — 🗣 영어 회화\n"
             "• 매일 19:00 — 💚 건강 기록\n"
-            "• 주말 22:00 — 📚 독서\n"
-            "• 일요일 19:00 — 📝 주간 리뷰"
+            "• 주말 22:00 — 📚 독서"
         )
     else:
         await update.message.reply_text(
@@ -133,9 +122,6 @@ async def post_init(application: Application):
 
     # 주말 오후 10:00 KST — 독서 (토~일)
     scheduler.add_job(job_reading, CronTrigger(day_of_week="sat,sun", hour=22, minute=0, timezone=KST), id="weekend_reading")
-
-    # 매주 일요일 오후 7:00 KST — 주간 리뷰
-    scheduler.add_job(job_weekly_review, CronTrigger(day_of_week="sun", hour=19, minute=0, timezone=KST), id="weekly_review")
 
     scheduler.start()
     logger.info("스케줄러 시작 완료 (KST 기준)")
