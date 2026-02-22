@@ -99,9 +99,10 @@ async def cmd_status(update: Update, _: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "🔔 알림 활성 상태\n\n"
             "⏰ 스케줄 (한국 시간 KST):\n"
-            "• 매일 09:30 — 🗣 영어 회화\n"
+            "• 평일 07:30 — 📚 독서\n"
+            "• 평일 07:50 — 🗣 영어 회화\n"
             "• 매일 19:00 — 💚 건강 기록\n"
-            "• 매일 22:00 — 📚 독서\n"
+            "• 주말 22:00 — 📚 독서\n"
             "• 일요일 19:00 — 📝 주간 리뷰"
         )
     else:
@@ -121,14 +122,17 @@ async def post_init(application: Application):
 
     scheduler = AsyncIOScheduler()
 
-    # 매일 오전 9:30 KST — 영어 회화
-    scheduler.add_job(job_english, CronTrigger(hour=9, minute=30, timezone=KST), id="daily_english")
+    # 평일 오전 7:50 KST — 영어 회화 (월~금)
+    scheduler.add_job(job_english, CronTrigger(day_of_week="mon-fri", hour=7, minute=50, timezone=KST), id="daily_english")
 
     # 매일 오후 7:00 KST — 건강 기록
     scheduler.add_job(job_health, CronTrigger(hour=19, minute=0, timezone=KST), id="daily_health")
 
-    # 매일 오후 10:00 KST — 독서
-    scheduler.add_job(job_reading, CronTrigger(hour=22, minute=0, timezone=KST), id="daily_reading")
+    # 평일 오전 7:30 KST — 독서 (월~금)
+    scheduler.add_job(job_reading, CronTrigger(day_of_week="mon-fri", hour=7, minute=30, timezone=KST), id="weekday_reading")
+
+    # 주말 오후 10:00 KST — 독서 (토~일)
+    scheduler.add_job(job_reading, CronTrigger(day_of_week="sat,sun", hour=22, minute=0, timezone=KST), id="weekend_reading")
 
     # 매주 일요일 오후 7:00 KST — 주간 리뷰
     scheduler.add_job(job_weekly_review, CronTrigger(day_of_week="sun", hour=19, minute=0, timezone=KST), id="weekly_review")
